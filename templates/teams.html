@@ -1,37 +1,27 @@
-
 {% extends "base.html" %}
-
 {% block title %}Teams{% endblock %}
-
 {% block content %}
-<h2>Register Football Team</h2>
-
-<form method="POST">
-    <label>Team Name</label>
-    <input type="text" name="name" required>
-    <button type="submit">Add Team</button>
-</form>
-
-<h2>Registered Teams</h2>
-
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Team Name</th>
-        <th>Number of Players</th>
-    </tr>
-
-    {% for team in teams %}
-    <tr>
-        <td>{{ team.id }}</td>
-        <td>{{ team.name }}</td>
-        <td>{{ team.player_count }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="3">No teams registered yet.</td>
-    </tr>
+<h1>Teams</h1>
+<section class="card">
+  <h2>Add team</h2>
+  <form method="post" class="inline">
+    <input name="name" placeholder="Team name" required>
+    <button>Add team</button>
+  </form>
+</section>
+<section class="card">
+  {% if teams %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Team</th><th>Players</th><th></th></tr></thead>
+    <tbody>
+    {% for t in teams %}
+      <tr><td>{{ t.name }}</td>
+          <td><a href="{{ url_for('players', team=t.id) }}">{{ t.player_count }}</a></td>
+          <td class="right"><form method="post" action="{{ url_for('delete_team', team_id=t.id) }}"
+              onsubmit="return confirm('Delete this team?')"><button class="danger">Delete</button></form></td></tr>
     {% endfor %}
-</table>
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">No teams yet.</p>{% endif %}
+</section>
 {% endblock %}
-

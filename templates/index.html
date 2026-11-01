@@ -1,55 +1,34 @@
-
 {% extends "base.html" %}
-
-{% block title %}Dashboard{% endblock %}
-
 {% block content %}
-<h2>Dashboard</h2>
-
-<div class="cards">
-    <div class="card">
-        <h3>Players</h3>
-        <p>{{ players_count }}</p>
-    </div>
-
-    <div class="card">
-        <h3>Teams</h3>
-        <p>{{ teams_count }}</p>
-    </div>
-
-    <div class="card">
-        <h3>Fixtures</h3>
-        <p>{{ fixtures_count }}</p>
-    </div>
-
-    <div class="card">
-        <h3>Results</h3>
-        <p>{{ results_count }}</p>
-    </div>
+<h1>Dashboard</h1>
+<div class="stats">
+  <div class="stat"><b>{{ teams_count }}</b><span>Teams</span></div>
+  <div class="stat"><b>{{ players_count }}</b><span>Players</span></div>
+  <div class="stat"><b>{{ fixtures_count }}</b><span>Fixtures</span></div>
+  <div class="stat"><b>{{ results_count }}</b><span>Results</span></div>
 </div>
-
-<h2>Upcoming Fixtures</h2>
-
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Home Team</th>
-        <th>Away Team</th>
-        <th>Venue</th>
-    </tr>
-
-    {% for match in upcoming %}
-    <tr>
-        <td>{{ match.match_date }}</td>
-        <td>{{ match.home_name }}</td>
-        <td>{{ match.away_name }}</td>
-        <td>{{ match.venue }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="4">No upcoming fixtures.</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="grid2">
+  <section class="card">
+    <h2>Upcoming fixtures</h2>
+    {% if upcoming %}
+    <ul class="plain">
+      {% for f in upcoming %}
+      <li><b>{{ f.home_name }}</b> vs <b>{{ f.away_name }}</b><br>
+          <small>{{ f.match_date|fmt_date }} · {{ f.venue }}</small></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">No scheduled fixtures. <a href="{{ url_for('fixtures') }}">Add one</a>.</p>{% endif %}
+  </section>
+  <section class="card">
+    <h2>Recent results</h2>
+    {% if recent %}
+    <ul class="plain">
+      {% for r in recent %}
+      <li>{{ r.home_name }} <b>{{ r.home_goals }} – {{ r.away_goals }}</b> {{ r.away_name }}<br>
+          <small>{{ r.match_date|fmt_date }}</small></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">No results yet.</p>{% endif %}
+  </section>
+</div>
 {% endblock %}
-

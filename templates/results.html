@@ -1,57 +1,34 @@
-
 {% extends "base.html" %}
-
-{% block title %}Match Results{% endblock %}
-
+{% block title %}Results{% endblock %}
 {% block content %}
-<h2>Record Match Result</h2>
-
-{% if pending %}
-<form method="POST">
-    <label>Select Fixture</label>
+<h1>Results</h1>
+<section class="card">
+  <h2>Record result</h2>
+  {% if pending %}
+  <form method="post" class="formgrid">
     <select name="fixture_id" required>
-        {% for match in pending %}
-        <option value="{{ match.id }}">
-            {{ match.match_date }}:
-            {{ match.home_name }} vs {{ match.away_name }}
-        </option>
-        {% endfor %}
+      <option value="" disabled selected>Fixture</option>
+      {% for f in pending %}<option value="{{ f.id }}">{{ f.home_name }} vs {{ f.away_name }} ({{ f.match_date|fmt_date }})</option>{% endfor %}
     </select>
-
-    <label>Home Team Goals</label>
-    <input type="number" name="home_goals" min="0" required>
-
-    <label>Away Team Goals</label>
-    <input type="number" name="away_goals" min="0" required>
-
-    <button type="submit">Save Result</button>
-</form>
-{% else %}
-<p>There are no fixtures awaiting results.</p>
-{% endif %}
-
-<h2>Recorded Results</h2>
-
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Home Team</th>
-        <th>Score</th>
-        <th>Away Team</th>
-    </tr>
-
-    {% for result in results %}
-    <tr>
-        <td>{{ result.match_date }}</td>
-        <td>{{ result.home_name }}</td>
-        <td>{{ result.home_goals }} - {{ result.away_goals }}</td>
-        <td>{{ result.away_name }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="4">No results recorded yet.</td>
-    </tr>
+    <input name="home_goals" type="number" min="0" placeholder="Home goals" required>
+    <input name="away_goals" type="number" min="0" placeholder="Away goals" required>
+    <button>Save result</button>
+  </form>
+  {% else %}<p class="muted">No fixtures awaiting a result.</p>{% endif %}
+</section>
+<section class="card">
+  {% if results %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Date</th><th>Home</th><th>Score</th><th>Away</th><th></th></tr></thead>
+    <tbody>
+    {% for r in results %}
+      <tr><td>{{ r.match_date|fmt_date }}</td><td>{{ r.home_name }}</td>
+          <td><b>{{ r.home_goals }} – {{ r.away_goals }}</b></td><td>{{ r.away_name }}</td>
+          <td class="right"><form method="post" action="{{ url_for('delete_result', result_id=r.id) }}"
+              onsubmit="return confirm('Remove this result?')"><button class="danger">Remove</button></form></td></tr>
     {% endfor %}
-</table>
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">No results recorded.</p>{% endif %}
+</section>
 {% endblock %}
-

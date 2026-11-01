@@ -1,51 +1,19 @@
-
 {% extends "base.html" %}
-
-{% block title %}League Table{% endblock %}
-
+{% block title %}League{% endblock %}
 {% block content %}
-<h2>Football League Standings</h2>
-
-<table>
-    <tr>
-        <th>Pos</th>
-        <th>Team</th>
-        <th>P</th>
-        <th>W</th>
-        <th>D</th>
-        <th>L</th>
-        <th>GF</th>
-        <th>GA</th>
-        <th>GD</th>
-        <th>Pts</th>
-    </tr>
-
-    {% for team in standings %}
-    <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ team.name }}</td>
-        <td>{{ team.played }}</td>
-        <td>{{ team.won }}</td>
-        <td>{{ team.drawn }}</td>
-        <td>{{ team.lost }}</td>
-        <td>{{ team.goals_for }}</td>
-        <td>{{ team.goals_against }}</td>
-        <td>{{ team.goal_difference }}</td>
-        <td><strong>{{ team.points }}</strong></td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="10">No teams have been registered.</td>
-    </tr>
+<h1>League table</h1>
+<section class="card">
+  {% if standings %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead>
+    <tbody>
+    {% for s in standings %}
+      <tr><td>{{ loop.index }}</td><td>{{ s.name }}</td><td>{{ s.played }}</td><td>{{ s.won }}</td><td>{{ s.drawn }}</td>
+          <td>{{ s.lost }}</td><td>{{ s.goals_for }}</td><td>{{ s.goals_against }}</td>
+          <td>{{ '%+d'|format(s.goal_difference) }}</td><td><b>{{ s.points }}</b></td></tr>
     {% endfor %}
-</table>
-
-<p>
-    P = Played, W = Won, D = Drawn, L = Lost,
-    GF = Goals For, GA = Goals Against,
-    GD = Goal Difference, Pts = Points.
-</p>
-
-<p>Points: 3 for a win, 1 for a draw, and 0 for a loss.</p>
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">Add teams and results to see the table.</p>{% endif %}
+</section>
 {% endblock %}
-

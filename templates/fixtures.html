@@ -1,65 +1,38 @@
-
 {% extends "base.html" %}
-
 {% block title %}Fixtures{% endblock %}
-
 {% block content %}
-<h2>Schedule a Match</h2>
-
-{% if teams|length >= 2 %}
-<form method="POST">
-    <label>Home Team</label>
+<h1>Fixtures</h1>
+<section class="card">
+  <h2>Schedule fixture</h2>
+  {% if teams|length >= 2 %}
+  <form method="post" class="formgrid">
     <select name="home_team" required>
-        <option value="">Select home team</option>
-        {% for team in teams %}
-        <option value="{{ team.id }}">{{ team.name }}</option>
-        {% endfor %}
+      <option value="" disabled selected>Home team</option>
+      {% for t in teams %}<option value="{{ t.id }}">{{ t.name }}</option>{% endfor %}
     </select>
-
-    <label>Away Team</label>
     <select name="away_team" required>
-        <option value="">Select away team</option>
-        {% for team in teams %}
-        <option value="{{ team.id }}">{{ team.name }}</option>
-        {% endfor %}
+      <option value="" disabled selected>Away team</option>
+      {% for t in teams %}<option value="{{ t.id }}">{{ t.name }}</option>{% endfor %}
     </select>
-
-    <label>Match Date and Time</label>
-    <input type="datetime-local" name="match_date" required>
-
-    <label>Venue</label>
-    <input type="text" name="venue" required>
-
-    <button type="submit">Save Fixture</button>
-</form>
-{% else %}
-<p>Register at least two teams before scheduling a match.</p>
-{% endif %}
-
-<h2>All Fixtures</h2>
-
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Home Team</th>
-        <th>Away Team</th>
-        <th>Venue</th>
-        <th>Status</th>
-    </tr>
-
-    {% for match in fixtures %}
-    <tr>
-        <td>{{ match.match_date }}</td>
-        <td>{{ match.home_name }}</td>
-        <td>{{ match.away_name }}</td>
-        <td>{{ match.venue }}</td>
-        <td>{{ match.status }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="5">No fixtures available.</td>
-    </tr>
+    <input name="match_date" type="datetime-local" required>
+    <input name="venue" placeholder="Venue" required>
+    <button>Schedule</button>
+  </form>
+  {% else %}<p class="muted">Add at least two teams first.</p>{% endif %}
+</section>
+<section class="card">
+  {% if fixtures %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Date</th><th>Match</th><th>Venue</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for f in fixtures %}
+      <tr><td>{{ f.match_date|fmt_date }}</td><td>{{ f.home_name }} vs {{ f.away_name }}</td><td>{{ f.venue }}</td>
+          <td><span class="badge {{ f.status|lower }}">{{ f.status }}</span></td>
+          <td class="right"><form method="post" action="{{ url_for('delete_fixture', fixture_id=f.id) }}"
+              onsubmit="return confirm('Delete this fixture and its result?')"><button class="danger">Delete</button></form></td></tr>
     {% endfor %}
-</table>
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">No fixtures yet.</p>{% endif %}
+</section>
 {% endblock %}
-

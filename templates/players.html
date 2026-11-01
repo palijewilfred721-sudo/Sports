@@ -1,66 +1,43 @@
-
 {% extends "base.html" %}
-
 {% block title %}Players{% endblock %}
-
 {% block content %}
-<h2>Register Football Player</h2>
-
-{% if teams %}
-<form method="POST">
-    <label>Full Name</label>
-    <input type="text" name="full_name" required>
-
-    <label>Jersey Number</label>
-    <input type="number" name="jersey_number" min="1" max="99">
-
-    <label>Position</label>
+<h1>Players</h1>
+<section class="card">
+  <h2>Register player</h2>
+  {% if teams %}
+  <form method="post" class="formgrid">
+    <input name="full_name" placeholder="Full name" required>
+    <input name="jersey_number" type="number" min="1" max="99" placeholder="Jersey (1-99)">
     <select name="position" required>
-        <option value="">Select position</option>
-        <option>Goalkeeper</option>
-        <option>Defender</option>
-        <option>Midfielder</option>
-        <option>Forward</option>
+      <option value="" disabled selected>Position</option>
+      {% for p in positions %}<option>{{ p }}</option>{% endfor %}
     </select>
-
-    <label>Team</label>
     <select name="team_id" required>
-        <option value="">Select team</option>
-        {% for team in teams %}
-        <option value="{{ team.id }}">{{ team.name }}</option>
-        {% endfor %}
+      <option value="" disabled selected>Team</option>
+      {% for t in teams %}<option value="{{ t.id }}">{{ t.name }}</option>{% endfor %}
     </select>
-
-    <button type="submit">Register Player</button>
-</form>
-{% else %}
-<p>You must <a href="{{ url_for('teams') }}">create a team</a> before registering players.</p>
-{% endif %}
-
-<h2>Registered Players</h2>
-
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Jersey</th>
-        <th>Position</th>
-        <th>Team</th>
-    </tr>
-
-    {% for player in players %}
-    <tr>
-        <td>{{ player.id }}</td>
-        <td>{{ player.full_name }}</td>
-        <td>{{ player.jersey_number or "-" }}</td>
-        <td>{{ player.position }}</td>
-        <td>{{ player.team_name }}</td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="5">No players registered yet.</td>
-    </tr>
+    <button>Register</button>
+  </form>
+  {% else %}<p class="muted">Add a team first on the <a href="{{ url_for('teams') }}">Teams</a> page.</p>{% endif %}
+</section>
+<section class="card">
+  <form method="get" class="inline">
+    <select name="team" onchange="this.form.submit()">
+      <option value="">All teams</option>
+      {% for t in teams %}<option value="{{ t.id }}" {{ 'selected' if team_filter == t.id }}>{{ t.name }}</option>{% endfor %}
+    </select>
+  </form>
+  {% if players %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>#</th><th>Name</th><th>Position</th><th>Team</th><th></th></tr></thead>
+    <tbody>
+    {% for p in players %}
+      <tr><td>{{ p.jersey_number or '–' }}</td><td>{{ p.full_name }}</td><td>{{ p.position }}</td><td>{{ p.team_name }}</td>
+          <td class="right"><form method="post" action="{{ url_for('delete_player', player_id=p.id) }}"
+              onsubmit="return confirm('Remove this player?')"><button class="danger">Remove</button></form></td></tr>
     {% endfor %}
-</table>
+    </tbody>
+  </table></div>
+  {% else %}<p class="muted">No players found.</p>{% endif %}
+</section>
 {% endblock %}
-
