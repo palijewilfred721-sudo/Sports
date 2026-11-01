@@ -1,0 +1,37 @@
+
+{% extends "base.html" %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<h2>Register Football Team</h2>
+
+<form method="POST">
+    <label>Team Name</label>
+    <input type="text" name="name" required>
+    <button type="submit">Add Team</button>
+</form>
+
+<h2>Registered Teams</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Team Name</th>
+        <th>Number of Players</th>
+    </tr>
+
+    {% for team in teams %}
+    <tr>
+        <td>{{ team.id }}</td>
+        <td>{{ team.name }}</td>
+        <td>{{ team.player_count }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="3">No teams registered yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

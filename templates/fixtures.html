@@ -1,0 +1,65 @@
+
+{% extends "base.html" %}
+
+{% block title %}Fixtures{% endblock %}
+
+{% block content %}
+<h2>Schedule a Match</h2>
+
+{% if teams|length >= 2 %}
+<form method="POST">
+    <label>Home Team</label>
+    <select name="home_team" required>
+        <option value="">Select home team</option>
+        {% for team in teams %}
+        <option value="{{ team.id }}">{{ team.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Away Team</label>
+    <select name="away_team" required>
+        <option value="">Select away team</option>
+        {% for team in teams %}
+        <option value="{{ team.id }}">{{ team.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Match Date and Time</label>
+    <input type="datetime-local" name="match_date" required>
+
+    <label>Venue</label>
+    <input type="text" name="venue" required>
+
+    <button type="submit">Save Fixture</button>
+</form>
+{% else %}
+<p>Register at least two teams before scheduling a match.</p>
+{% endif %}
+
+<h2>All Fixtures</h2>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Venue</th>
+        <th>Status</th>
+    </tr>
+
+    {% for match in fixtures %}
+    <tr>
+        <td>{{ match.match_date }}</td>
+        <td>{{ match.home_name }}</td>
+        <td>{{ match.away_name }}</td>
+        <td>{{ match.venue }}</td>
+        <td>{{ match.status }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="5">No fixtures available.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

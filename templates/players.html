@@ -1,0 +1,66 @@
+
+{% extends "base.html" %}
+
+{% block title %}Players{% endblock %}
+
+{% block content %}
+<h2>Register Football Player</h2>
+
+{% if teams %}
+<form method="POST">
+    <label>Full Name</label>
+    <input type="text" name="full_name" required>
+
+    <label>Jersey Number</label>
+    <input type="number" name="jersey_number" min="1" max="99">
+
+    <label>Position</label>
+    <select name="position" required>
+        <option value="">Select position</option>
+        <option>Goalkeeper</option>
+        <option>Defender</option>
+        <option>Midfielder</option>
+        <option>Forward</option>
+    </select>
+
+    <label>Team</label>
+    <select name="team_id" required>
+        <option value="">Select team</option>
+        {% for team in teams %}
+        <option value="{{ team.id }}">{{ team.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Register Player</button>
+</form>
+{% else %}
+<p>You must <a href="{{ url_for('teams') }}">create a team</a> before registering players.</p>
+{% endif %}
+
+<h2>Registered Players</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Jersey</th>
+        <th>Position</th>
+        <th>Team</th>
+    </tr>
+
+    {% for player in players %}
+    <tr>
+        <td>{{ player.id }}</td>
+        <td>{{ player.full_name }}</td>
+        <td>{{ player.jersey_number or "-" }}</td>
+        <td>{{ player.position }}</td>
+        <td>{{ player.team_name }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="5">No players registered yet.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

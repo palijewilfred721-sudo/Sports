@@ -1,0 +1,165 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f4f8;
+    color: #222;
+}
+
+header {
+    background: #123c69;
+    color: white;
+    text-align: center;
+    padding: 25px 10px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    background: #092b4c;
+    padding: 14px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background: #2467a6;
+}
+
+main {
+    max-width: 1150px;
+    margin: 25px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: #e7f0fa;
+    border-left: 5px solid #123c69;
+    padding: 18px;
+    border-radius: 5px;
+}
+
+.card p {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+form {
+    max-width: 550px;
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+}
+
+button {
+    background: #184950;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background: #2467a6;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0 30px;
+    overflow-wrap: anywhere;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #123c69;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f2f5f8;
+}
+
+.message {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.success {
+    background: #d8f3dc;
+    color: #1b4332;
+}
+
+.error {
+    background: #ffe0e0;
+    color: #8b0000;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+}
+
+@media (max-width: 650px) {
+    main {
+        margin: 10px;
+        padding: 12px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 6px;
+    }
+}
+

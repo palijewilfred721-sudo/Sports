@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Dashboard</h2>
+
+<div class="cards">
+    <div class="card">
+        <h3>Players</h3>
+        <p>{{ players_count }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Teams</h3>
+        <p>{{ teams_count }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Fixtures</h3>
+        <p>{{ fixtures_count }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Results</h3>
+        <p>{{ results_count }}</p>
+    </div>
+</div>
+
+<h2>Upcoming Fixtures</h2>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Venue</th>
+    </tr>
+
+    {% for match in upcoming %}
+    <tr>
+        <td>{{ match.match_date }}</td>
+        <td>{{ match.home_name }}</td>
+        <td>{{ match.away_name }}</td>
+        <td>{{ match.venue }}</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="4">No upcoming fixtures.</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
