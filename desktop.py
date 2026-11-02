@@ -1,32 +1,44 @@
-"""Windows desktop entry point: Flask in a thread + a native window."""
+"""Windows desktop launcher: runs Flask locally and shows it in a native window."""
 import socket
 import threading
-import time
 
-import webview
+from werkzeug.serving import make_server
 
 from app import app
 
-HOST, PORT = "127.0.0.1", 5000
+
+def free_port() -> int:
+    with socket.socket() as sock:
+        sock.bind(("127.0.0.1", 0))
+        return sock.getsockname()[1]
 
 
-def run_server():
-    app.run(host=HOST, port=PORT, debug=False, use_reloader=False)
-
-
-def wait_for_server(timeout=10):
-    end = time.time() + timeout
-    while time.time() < end:
-        with socket.socket() as s:
-            if s.connect_ex((HOST, PORT)) == 0:
-                return True
-        time.sleep(0.2)
-    return False
+def main():
+    port = free_port()
+    server = make_server("127.0.0.1", port, app, threaded=True)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    url = f"http://127.0.0.1:{port}/"
+    try:
+        import webview
+        webview.create_window("Football Manager", url, width=1100, height=760)
+        webview.start()
+    except Exception as error:  # e.g. WebView2 runtime missing
+        try:
+            import tkinter
+            from tkinter import messagebox
+            root = tkinter.Tk()
+            root.withdraw()
+            messagebox.showerror(
+                "Football Manager",
+                "Could not open the app window.\n"
+                "Install the Microsoft Edge WebView2 Runtime and try again.\n\n"
+                f"Details: {error}",
+            )
+        except Exception:
+            pass
+    finally:
+        server.shutdown()
 
 
 if __name__ == "__main__":
-    threading.Thread(target=run_server, daemon=True).start()
-    wait_for_server()
-    webview.create_window("Football Manager", f"http://{HOST}:{PORT}",
-                          width=1200, height=800)
-    webview.start()
+    main()
